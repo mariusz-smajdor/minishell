@@ -21,6 +21,7 @@ int main()
 		input = readline("minishell$ ");
 		if (!input)
 			break ;
+		add_history(input);
 		printf("%s", input);
 		free(input);
 	}
