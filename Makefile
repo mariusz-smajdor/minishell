@@ -10,7 +10,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 all: $(NAME)
 
 $(NAME): $(SRCS) $(LIBFT)
-	$(CC) $(FLAGS) $(SRCS) $(LIBFT) -o $@
+	$(CC) $(FLAGS) $(SRCS) $(LIBFT) -lreadline -o $@
 	$(RM) $(LIBFT)
 
 $(LIBFT):
