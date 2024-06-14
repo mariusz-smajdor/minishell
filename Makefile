@@ -3,7 +3,7 @@ CC = cc
 FLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
-SRCS = main.c
+SRCS = main.c parse_input/parse_input.c parse_input/utils.c
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 

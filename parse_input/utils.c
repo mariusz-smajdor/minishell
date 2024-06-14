@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,20 +10,41 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int	main()
+size_t	count_commands(char *input)
 {
-	char	*input;
+	size_t	commands;
+	size_t	i;
 
-	while (1)
+	commands = 0;
+	i = 0;
+	skip_spaces(input, &i);
+	while (input[i])
 	{
-		input = readline("minishell$ ");
-		if (!input)
-			break ;
-		add_history(input);
-		parse_input(input);
-		free(input);
+		if (!ft_isspace(input[i]))
+		{
+			commands++;
+			while (input[i] && !ft_isspace(input[i]))
+				i++;
+		}
+		i++;
 	}
-	return (0);
+	return (commands);
+}
+
+size_t	commandlen(char *input)
+{
+	size_t	i;
+
+	i = 0;
+	while (input[i] && !ft_isspace(input[i]))
+		i++;
+	return (i);
+}
+
+void	skip_spaces(char *input, size_t *i)
+{
+	while (input[*i] == ' ')
+		(*i)++;
 }
