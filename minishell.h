@@ -9,7 +9,6 @@
 
 void	parse_input(char *input);
 size_t	count_commands(char *input);
-size_t	commandlen(char *input);
-void	skip_spaces(char *input, size_t *i);
+void	skip_spaces(char *input);
 
 #endif

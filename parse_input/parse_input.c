@@ -12,40 +12,53 @@
 
 #include "../minishell.h"
 
-static void	fill_commands(char **commands, char *input)
+void	skip_spaces(char *input)
 {
-	size_t	i;
-	size_t	j;
-	size_t	k;
+	while (*input == ' ')
+		input++;
+}
 
-	i = 0;
-	j = 0;
-	k = 0;
-	skip_spaces(input, &i);
-	while (input[i])
+char	*closest_to_split(const char *input)
+{
+	char	*closest;
+	
+	closest = ft_strchr(input, '\0');
+	if (ft_strchr(input, ' ') && ft_strchr(input, ' ') < closest)
+		closest = ft_strchr(input, ' ');
+	if (ft_strchr(input, '"') && ft_strchr(input, '"') < closest)
+		closest = ft_strchr(input, '"');
+	return (closest);
+}
+
+size_t	count_commands(char *input)
+{
+	size_t	count;
+
+	count = 0;
+	while(*input == ' ')
+		input++;
+	while (*input)
 	{
-		if (!ft_isspace(input[i]))
+		input = closest_to_split(input);
+		if (*input == '"')
 		{
-			commands[j] = malloc(sizeof(char) * (commandlen(input + i) + 1));
-			if (!commands[j])
-				exit(1);
-			while (input[i] && !ft_isspace(input[i]))
-				commands[j][k++] = input[i++];
-			commands[j][k] = '\0';
-			k = 0;
-			j++;
+			input++;
+			input = ft_strchr(input, '"') + 1;
 		}
-		i++;
+		if (*input == ' ')
+			while(*input == ' ')
+				input++;
+		count++;
 	}
-	commands[j] = NULL;
+	return (count);
 }
 
 void	parse_input(char *input)
 {
-	char **commands;
+	char	**commands;
 
 	commands = malloc(sizeof(char *) * count_commands(input) + 1);
 	if (!commands)
 		exit(1);
-	fill_commands(commands, input);
+	printf("count_commands: %zu\n", count_commands(input));
 }
