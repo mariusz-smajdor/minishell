@@ -1,23 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_input.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 22:15:00 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/06/03 22:15:01 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/06/03 17:15:00 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/06/03 17:15:01 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	parse_input(char *input)
+bool	is_space(char c)
 {
-	char	**commands;
+	return (c == ' ' || (c >= '\t' && c <= '\r'));
+}
 
-	commands = malloc(sizeof(char *) * count_commands(input) + 1);
-	if (!commands)
-		exit(1);
-	printf("count_commands: %zu\n", count_commands(input));
+bool	is_operator(char c)
+{
+	return (c == '|' || c == ';' || c == '<' || c == '>');
+}
+
+bool	is_quote(char c)
+{
+	return (c == '`' || c == '\'' || c == '"');
+}
+
+void	skip_spaces(char *input, size_t *i)
+{
+	while (is_space(input[*i]))
+		(*i)++;
 }

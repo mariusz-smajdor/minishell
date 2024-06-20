@@ -11,4 +11,9 @@
 void	parse_input(char *input);
 size_t	count_commands(char *input);
 
+bool	is_space(char c);
+bool	is_operator(char c);
+bool	is_quote(char c);
+void	skip_spaces(char *input, size_t *i);
+
 #endif
