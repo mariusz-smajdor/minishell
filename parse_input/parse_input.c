@@ -12,43 +12,60 @@
 
 #include "../minishell.h"
 
-void	skip_spaces(char *input)
+bool	is_space(char c)
 {
-	while (*input == ' ')
-		input++;
+	return (c == ' ' || (c >= '\t' && c <= '\r'));
 }
 
-char	*closest_to_split(const char *input)
+void	skip_spaces(char *input, size_t *i)
 {
-	char	*closest;
-	
-	closest = ft_strchr(input, '\0');
-	if (ft_strchr(input, ' ') && ft_strchr(input, ' ') < closest)
-		closest = ft_strchr(input, ' ');
-	if (ft_strchr(input, '"') && ft_strchr(input, '"') < closest)
-		closest = ft_strchr(input, '"');
-	return (closest);
+	while (is_space(input[*i]))
+		(*i)++;
+}
+
+bool	is_quote(char c)
+{
+	return (c == '`' || c == '\'' || c == '"');
+}
+
+void	count_quoted_command(char *input, size_t *count, size_t *i)
+{
+	char	quote;
+
+	quote = input[*i];
+	(*i)++;
+	while (input[*i] && input[*i] != quote)
+	{
+		if (input[*i] == '\\')
+			(*i) += 2;
+		(*i)++;
+	}
+	(*count)++;
+	(*i)++;
+}
+
+void	cound_command(char *input, size_t *count, size_t *i)
+{
+	while (input[*i] && !is_space(input[*i]) && !is_quote(input[*i]))
+		(*i)++;
+	(*count)++;
 }
 
 size_t	count_commands(char *input)
 {
 	size_t	count;
+	size_t	i;
 
 	count = 0;
-	while(*input == ' ')
-		input++;
-	while (*input)
+	i = 0;
+	while (input[i])
 	{
-		input = closest_to_split(input);
-		if (*input == '"')
-		{
-			input++;
-			input = ft_strchr(input, '"') + 1;
-		}
-		if (*input == ' ')
-			while(*input == ' ')
-				input++;
-		count++;
+		if (is_space(input[i]))
+			skip_spaces(input, &i);
+		if (is_quote(input[i]))
+			count_quoted_command(input, &count, &i);
+		if (!is_space(input[i]) && !is_quote(input[i]) && input[i])
+			count_command(input, &count, &i);
 	}
 	return (count);
 }
