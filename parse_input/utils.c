@@ -12,19 +12,19 @@
 
 #include "../minishell.h"
 
-bool	is_space(char c)
-{
-	return (c == ' ' || (c >= '\t' && c <= '\r'));
-}
-
 bool	is_operator(char c)
 {
-	return (c == '|' || c == ';' || c == '<' || c == '>');
+	return (c == '|' || c == ';' || c == '<' || c == '>' || c == '&');
 }
 
 bool	is_quote(char c)
 {
 	return (c == '`' || c == '\'' || c == '"');
+}
+
+bool	is_space(char c)
+{
+	return (c == ' ' || (c >= '\t' && c <= '\r'));
 }
 
 void	skip_spaces(char *input, size_t *i)

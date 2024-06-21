@@ -12,6 +12,29 @@
 
 #include "../minishell.h"
 
+static void	count_operator_command(char *input, size_t *count, size_t *i)
+{
+	if (input[*i] == '|' || input[*i] == ';')
+	{
+		(*count)++;
+		(*i)++;
+	}
+	if (input[*i] == '<' || input[*i] == '>')
+	{
+		(*count)++;
+		(*i)++;
+		if (input[*i] == input[*i - 1])
+			(*i)++;
+	}
+	if (input[*i] == '&')
+	{
+		(*count)++;
+		(*i)++;
+		if (input[*i] == '&')
+			(*i)++;
+	}
+}
+
 static void	count_quoted_command(char *input, size_t *count, size_t *i)
 {
 	char	quote;
@@ -48,6 +71,8 @@ size_t	count_commands(char *input)
 			skip_spaces(input, &i);
 		if (is_quote(input[i]))
 			count_quoted_command(input, &count, &i);
+		if (is_operator(input[i]))
+			count_operator_command(input, &count, &i);
 		if (!is_space(input[i]) && !is_quote(input[i]) && input[i])
 			count_command(input, &count, &i);
 	}
