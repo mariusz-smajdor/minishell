@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_striteri.c                                      :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/06 15:43:15 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/04/06 15:43:56 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/06/03 22:15:00 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/06/03 22:15:01 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_striteri(char *s, void (*f)(unsigned int, char*))
+int	main()
 {
-	unsigned int	i;
+	char	*input;
 
-	i = 0;
-	while (s[i])
+	while (1)
 	{
-		(*f)(i, &s[i]);
-		i++;
+		input = readline("minishell$ ");
+		if (!input)
+			break ;
+		add_history(input);
+		free(input);
 	}
+	return (0);
 }

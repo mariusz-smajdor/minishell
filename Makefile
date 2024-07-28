@@ -3,24 +3,19 @@ CC = cc
 FLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
-SRCS = main.c parse_input/parse_input.c parse_input/count_commands.c parse_input/utils.c
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
+SRCS = minishell.c
+OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(SRCS) $(LIBFT)
+$(NAME): $(SRCS)
 	$(CC) $(FLAGS) $(SRCS) $(LIBFT) -lreadline -o $@
-	$(RM) $(LIBFT)
-
-$(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
+	$(MAKE) clean
 
 clean:
-	$(RM) $(LIBFT_DIR)/*.o
+	$(RM) $(OBJS)
 
 fclean: clean
 	$(RM) $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
 
 .PHONY: all clean fclean re
