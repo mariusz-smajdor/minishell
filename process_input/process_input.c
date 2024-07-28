@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   process_input.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,20 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int	main()
+static void check_unclosed_quotes(char *cmd)
 {
-	char	*input;
+    char    quote;
 
-	while (true)
-	{
-		input = readline("minishell$ ");
-		if (!input)
-			break ;
-		process_input(input);
-		add_history(input);
-		free(input);
-	}
-	return (0);
+    while (*cmd)
+    {
+        if (*cmd == '\'' || *cmd == '\"')
+        {
+            quote = *cmd;
+            cmd++;
+            while (*cmd && *cmd != quote)
+                cmd++;
+            if (!*cmd)
+                exit_program("You must close the quotes!", EXIT_FAILURE);
+        }
+        cmd++;
+    }
+}
+
+void	process_input(char *input)
+{
+    check_unclosed_quotes(input);
 }

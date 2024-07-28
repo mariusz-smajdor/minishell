@@ -3,7 +3,7 @@ CC = cc
 FLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
-SRCS = minishell.c
+SRCS = minishell.c utils/exit_program.c process_input/process_input.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

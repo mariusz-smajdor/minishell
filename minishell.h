@@ -2,8 +2,11 @@
 # define MINISHELL_H
 
 # include <stdlib.h>
+# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+typedef struct s_command t_command;
 
 typedef enum e_tokens
 {
@@ -20,5 +23,8 @@ typedef struct s_command
 	t_tokens	token;
 	t_command	*next;
 }	t_command;
+
+void	exit_program(const char *message, const int status);
+void	process_input(char *input);
 
 #endif
