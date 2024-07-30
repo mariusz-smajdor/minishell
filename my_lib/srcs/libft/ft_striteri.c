@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   safe_malloc.c                                      :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiacek <mwiacek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 22:15:00 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/06/03 22:15:01 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/02/29 22:19:12 by mwiacek           #+#    #+#             */
+/*   Updated: 2024/04/12 09:42:34 by mwiacek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/libft.h"
 
-void	*safe_malloc(size_t size)
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
 {
-    void	*ptr;
+	size_t	i;
 
-    ptr = malloc(size);
-    if (!ptr)
-        exit_program("Memory allocation failed!", EXIT_FAILURE);
-    return (ptr);
+	i = 0;
+	if (s && f)
+	{
+		while (s[i] != '\0')
+		{
+			(*f)(i, &s[i]);
+			i++;
+		}
+	}
 }

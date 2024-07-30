@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   safe_malloc.c                                      :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiacek <mwiacek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 22:15:00 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/06/03 22:15:01 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/02/26 17:27:54 by mwiacek           #+#    #+#             */
+/*   Updated: 2024/04/12 09:41:35 by mwiacek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/libft.h"
 
-void	*safe_malloc(size_t size)
+int	ft_isdigit(int c)
 {
-    void	*ptr;
-
-    ptr = malloc(size);
-    if (!ptr)
-        exit_program("Memory allocation failed!", EXIT_FAILURE);
-    return (ptr);
+	if (c >= '0' && c <= '9')
+	{
+		return (1);
+	}
+	else
+	{
+		return (0);
+	}
 }

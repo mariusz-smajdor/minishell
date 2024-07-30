@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   safe_malloc.c                                      :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiacek <mwiacek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 22:15:00 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/06/03 22:15:01 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/03/17 23:04:07 by mwiacek           #+#    #+#             */
+/*   Updated: 2024/04/12 09:38:13 by mwiacek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
 
-void	*safe_malloc(size_t size)
-{
-    void	*ptr;
+# include <unistd.h>
+# include <stdlib.h>
 
-    ptr = malloc(size);
-    if (!ptr)
-        exit_program("Memory allocation failed!", EXIT_FAILURE);
-    return (ptr);
-}
+char		*get_next_line(int fd);
+
+#endif

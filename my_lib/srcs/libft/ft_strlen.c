@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   safe_malloc.c                                      :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiacek <mwiacek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 22:15:00 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/06/03 22:15:01 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/02/26 22:22:18 by mwiacek           #+#    #+#             */
+/*   Updated: 2024/04/12 09:42:46 by mwiacek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/libft.h"
 
-void	*safe_malloc(size_t size)
+size_t	ft_strlen(const char *s)
 {
-    void	*ptr;
+	int	i;
 
-    ptr = malloc(size);
-    if (!ptr)
-        exit_program("Memory allocation failed!", EXIT_FAILURE);
-    return (ptr);
+	i = 0;
+	while (s[i])
+	{
+		i++;
+	}
+	return (i);
 }

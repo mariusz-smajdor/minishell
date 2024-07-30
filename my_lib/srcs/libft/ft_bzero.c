@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   safe_malloc.c                                      :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiacek <mwiacek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 22:15:00 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/06/03 22:15:01 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/02/26 22:44:24 by mwiacek           #+#    #+#             */
+/*   Updated: 2024/04/12 09:37:27 by mwiacek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/libft.h"
 
-void	*safe_malloc(size_t size)
+void	ft_bzero(void *s, int n)
 {
-    void	*ptr;
-
-    ptr = malloc(size);
-    if (!ptr)
-        exit_program("Memory allocation failed!", EXIT_FAILURE);
-    return (ptr);
+	while (n > 0)
+	{
+		*(char *)s = 0;
+		s++;
+		n--;
+	}
 }

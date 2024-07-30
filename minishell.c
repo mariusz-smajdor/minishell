@@ -14,14 +14,17 @@
 
 int	main()
 {
+	t_cmd	*cmd;
 	char	*input;
 
+	cmd = safe_malloc(sizeof(t_cmd));
+	ft_printf("TWOJA STARA TO TWÓJ STARY!");
 	while (true)
 	{
 		input = readline("minishell$ ");
 		if (!input)
 			break ;
-		process_input(input);
+		process_input(cmd, input);
 		add_history(input);
 		free(input);
 	}

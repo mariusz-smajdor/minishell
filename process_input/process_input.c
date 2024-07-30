@@ -15,23 +15,24 @@
 static void check_unclosed_quotes(char *cmd)
 {
     char    quote;
+	short	i;
 
-    while (*cmd)
+    while (cmd[i])
     {
         if (*cmd == '\'' || *cmd == '\"')
         {
-            quote = *cmd;
-            cmd++;
-            while (*cmd && *cmd != quote)
+            quote = cmd[i];
+            i++;
+            while (cmd[i] && cmd[i] != quote)
                 cmd++;
-            if (!*cmd)
+            if (!cmd[i])
                 exit_program("You must close the quotes!", EXIT_FAILURE);
         }
-        cmd++;
+        i++;
     }
 }
 
-void	process_input(char *input)
+void	process_input(t_cmd *cmd, char *input)
 {
     check_unclosed_quotes(input);
 }
