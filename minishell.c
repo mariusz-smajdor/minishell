@@ -18,7 +18,6 @@ int	main()
 	char	*input;
 
 	cmd = safe_malloc(sizeof(t_cmd));
-	ft_printf("TWOJA STARA TO TWÓJ STARY!");
 	while (true)
 	{
 		input = readline("minishell$ ");

@@ -22,7 +22,7 @@ typedef enum e_tokens
 
 typedef struct s_cmd
 {
-	char		**cmds;
+	char		**args;
 	t_tokens	token;
 	t_cmd		*next;
 }	t_cmd;

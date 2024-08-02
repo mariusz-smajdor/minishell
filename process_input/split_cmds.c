@@ -12,28 +12,45 @@
 
 #include "../minishell.h"
 
-static void check_unclosed_quotes(char *cmd)
+static int count_args(char *input, int i)
 {
-    char    quote;
-	short	i;
+	int		count;
+	char	quote;
 
-    while (cmd[i])
+	count = 0;
+    while (input[i] || input[i] != '|' || input[i] != '>' || input[i] != '<') // todo is_operator
     {
-        if (*cmd == '\'' || *cmd == '\"')
-        {
-            quote = cmd[i];
-            i++;
-            while (cmd[i] && cmd[i] != quote)
-                cmd++;
-            if (!cmd[i])
-                exit_program("You must close the quotes!", EXIT_FAILURE);
-        }
-        i++;
-    }
+		if (input[i] == '\'' || input[i] == '\"') // todo is_quote
+		{
+			quote = input[i];
+			i++;
+			while (input[i] != quote)
+				i++;
+			i++;
+		}
+		if (input[i] == ' ')
+		{
+			count++;
+			while (input[i] == ' ') // is_space
+				i++;
+		}
+		if (ft_strlen(&input[i]) > 0)
+			count++;
+	}
+	return (count);
 }
 
-void	process_input(t_cmd *cmd, char *input)
+void split_cmds(t_cmd *cmd, char *input)
 {
-    check_unclosed_quotes(input);
-    split_cmds(cmd, input);
+    int i = 0;
+    t_cmd *new_cmd;
+
+    while (input[i])
+    {
+        new_cmd = safe_malloc(sizeof(new_cmd));
+        if (!cmd)
+            cmd = new_cmd;
+        new_cmd->args = safe_malloc(sizeof(char *) * count_args(input, i));
+
+    }
 }
