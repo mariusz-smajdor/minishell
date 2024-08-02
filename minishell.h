@@ -29,9 +29,12 @@ typedef struct s_cmd
 
 void	exit_program(const char *message, const int status);
 void	*safe_malloc(size_t size);
+
+// PARSING
 void	process_input(t_cmd *cmd, char *input);
+void	split_cmds(t_cmd *cmd, char *input);
 
 // BUILTINS
-int	mini_echo(char **argv);
+int		mini_echo(char **argv);
 
 #endif
