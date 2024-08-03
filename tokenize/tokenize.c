@@ -38,40 +38,40 @@ static int	token_len(char *input)
 	return (len);
 }
 
+static void	add_new_token(t_token **token, char *input, int len)
+{
+	t_token	*new;
+	t_token	*begin;
+
+	new = safe_malloc(sizeof(t_token));
+	new->value = safe_malloc(len + 1);
+	ft_strlcpy(new->value, input, len + 1);
+	new->next = NULL;
+	if (!*token)
+	{
+		*token = new;
+		begin = *token;
+	}
+	else
+	{
+		while ((*token)->next)
+			*token = (*token)->next;
+		(*token)->next = new;
+	}
+		*token = begin;
+}
+
 void	tokenize(char *input)
 {
 	int		len;
-	t_token *begin;
-	t_token *token;
-	t_token	*new_token;
+	t_token	*token;
 
 	token = NULL;
-	begin = NULL;
 	while (*input)
 	{
-		new_token = safe_malloc(sizeof(t_token));
-		new_token->next = NULL;
-		if (!token)
-		{
-			token = new_token;
-			begin = token;
-		}	
-		else
-		{
-			while (token->next)
-				token = token->next;
-			token->next = new_token;
-		}
 		len = token_len(input);
-		new_token->value = safe_malloc(len + 1);
-		ft_strlcpy(new_token->value, input, len + 1);
+		add_new_token(&token, input, len);
 		input += len;
 		skip_spaces(&input);
-	}
-	token = begin;
-	while (token)
-	{
-		printf("Token: %s\n", token->value);
-		token = token->next;
 	}
 }
