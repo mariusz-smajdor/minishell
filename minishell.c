@@ -21,6 +21,7 @@ int	main()
 		input = readline("minishell$ ");
 		if (!input)
 			break ;
+		tokenize(ft_strtrim(input, " \t\n\r\v\f"));
 		add_history(input);
 		free(input);
 	}
