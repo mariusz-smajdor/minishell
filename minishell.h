@@ -5,6 +5,7 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "libft/libft.h"
 
 // UTILS
 void	exit_program(const char *message, const int status);

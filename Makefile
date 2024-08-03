@@ -6,18 +6,24 @@ RM = rm -f
 SRCS = minishell.c builtins/mini_echo.c utils/exit_program.c utils/safe_malloc.c
 OBJS = $(SRCS:.c=.o)
 
-all: $(NAME)
+LIBFT = libft/libft.a
 
-$(NAME): $(OBJS)
+all: $(LIBFT) $(NAME)
+
+$(LIBFT):
+	make -C libft
+
+$(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(FLAGS) $(OBJS) -Llibft -lft -lreadline -o $@
 	$(MAKE) clean
 
 clean:
-	make clean -C libft
 	$(RM) $(OBJS)
 
 fclean: clean
 	make fclean -C libft
 	$(RM) $(NAME)
+
+re: fclean all
 
 .PHONY: all clean fclean re
