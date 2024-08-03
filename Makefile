@@ -20,9 +20,9 @@ $(NAME): $(OBJS) $(LIBFT)
 
 clean:
 	$(RM) $(OBJS)
+	make fclean -C libft
 
 fclean: clean
-	make fclean -C libft
 	$(RM) $(NAME)
 
 re: fclean all
