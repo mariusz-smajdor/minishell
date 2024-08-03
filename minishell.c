@@ -14,16 +14,13 @@
 
 int	main()
 {
-	t_cmd	*cmd;
 	char	*input;
 
-	cmd = safe_malloc(sizeof(t_cmd));
 	while (true)
 	{
 		input = readline("minishell$ ");
 		if (!input)
 			break ;
-		process_input(cmd, input);
 		add_history(input);
 		free(input);
 	}
