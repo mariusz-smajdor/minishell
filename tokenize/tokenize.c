@@ -38,6 +38,22 @@ static int	token_len(char *input)
 	return (len);
 }
 
+static void	assign_operator(t_token *token)
+{
+	if (!ft_strncmp(token->value, "|", 2))
+		token->operator = PIPE;
+	else if (!ft_strncmp(token->value, "<", 2))
+		token->operator = LT;
+	else if (!ft_strncmp(token->value, ">", 2))
+		token->operator = GT;
+	else if (!ft_strncmp(token->value, "<<", 3))
+		token->operator = LTLT;
+	else if (!ft_strncmp(token->value, ">>", 3))
+		token->operator = GTGT;
+	else
+		token->operator = NONE;
+}
+
 static void	add_new_token(t_token **token, char *input, int len)
 {
 	t_token	*new;
@@ -46,6 +62,7 @@ static void	add_new_token(t_token **token, char *input, int len)
 	new = safe_malloc(sizeof(t_token));
 	new->value = safe_malloc(len + 1);
 	ft_strlcpy(new->value, input, len + 1);
+	assign_operator(new);
 	new->next = NULL;
 	if (!*token)
 	{
@@ -58,7 +75,7 @@ static void	add_new_token(t_token **token, char *input, int len)
 			*token = (*token)->next;
 		(*token)->next = new;
 	}
-		*token = begin;
+	*token = begin;
 }
 
 void	tokenize(char *input)
