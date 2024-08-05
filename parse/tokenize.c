@@ -78,16 +78,15 @@ static void	add_new_token(t_token **token, char *input, int len)
 	*token = begin;
 }
 
-void	tokenize(char *input)
+void	tokenize(t_token **token, char *input)
 {
 	int		len;
-	t_token	*token;
 
-	token = NULL;
+	*token = NULL;
 	while (*input)
 	{
 		len = token_len(input);
-		add_new_token(&token, input, len);
+		add_new_token(token, input, len);
 		input += len;
 		skip_spaces(&input);
 	}
