@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   free_lists.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,24 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int	main()
+static void	free_tokens(t_token **token)
 {
-	t_cmd	*cmd;
-	t_token	*token;
-	char	*input;
+	t_token	*tmp;
 
-	while (true)
+	while (*token)
 	{
-		input = readline("minishell$ ");
-		if (!input)
-			break ;
-		tokenize(&token, ft_strtrim(input, " \t\n\r\v\f"));
-		fill_commands(&cmd, &token);
-		add_history(input);
-		free(input);
-		free_lists(&token, &cmd);
+		tmp = *token;
+		*token = (*token)->next;
+		free(tmp->value);
+		free(tmp);
 	}
-	return (0);
+}
+
+static void	free_commands(t_cmd **cmd)
+{
+	t_cmd	*tmp;
+
+	while (*cmd)
+	{
+		tmp = *cmd;
+		*cmd = (*cmd)->next;
+		free(tmp->av);
+		free(tmp);
+	}
+}
+
+void	free_lists(t_token **token, t_cmd **cmd)
+{
+	free_tokens(token);
+	free_commands(cmd);
 }
