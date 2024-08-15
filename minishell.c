@@ -15,7 +15,6 @@
 int	main()
 {
 	t_cmd	*cmd;
-	t_token	*token;
 	char	*input;
 
 	while (true)
@@ -23,11 +22,9 @@ int	main()
 		input = readline("minishell$ ");
 		if (!input)
 			break ;
-		tokenize(&token, ft_strtrim(input, " \t\n\r\v\f"));
-		fill_commands(&cmd, &token);
+		parse_input(&shell, ft_strtrim(input, " \t\n\r\v\f"));
 		add_history(input);
 		free(input);
-		free_lists(&token, &cmd);
 	}
 	return (0);
 }
