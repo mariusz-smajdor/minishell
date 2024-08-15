@@ -7,7 +7,6 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
-typedef struct s_token	t_token;
 typedef struct s_cmd	t_cmd;
 
 typedef enum e_ops
@@ -19,13 +18,6 @@ typedef enum e_ops
 	GTGT,
 	END,
 }	t_ops;
-
-typedef struct s_token
-{
-	char	*value;
-	t_ops	operator;
-	t_token	*next;
-}	t_token;
 
 typedef struct s_cmd
 {
