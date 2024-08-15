@@ -33,6 +33,9 @@ bool	is_quote(const char c);
 void	exit_program(const char *message, const int status);
 void	*safe_malloc(size_t size);
 
+// PARSING
+void	parse_input(t_shell *shell, char *input);
+
 // BUILTINS
 int		mini_echo(char **argv);
 
