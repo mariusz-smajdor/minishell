@@ -24,5 +24,5 @@ bool is_space(const char c)
 
 bool is_quote(const char c)
 {
-	return (c == '\'' || c == '\"' || c == '`');
+	return (c == '\'' || c == '\"');
 }
