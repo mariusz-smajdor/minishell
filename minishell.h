@@ -12,7 +12,6 @@ typedef struct s_cmd	t_cmd;
 
 typedef enum e_ops
 {
-	NONE,
 	PIPE,
 	LT,
 	GT,
