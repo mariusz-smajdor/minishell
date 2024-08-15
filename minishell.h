@@ -32,7 +32,6 @@ bool	is_space(const char c);
 bool	is_quote(const char c);
 void	exit_program(const char *message, const int status);
 void	*safe_malloc(size_t size);
-void	free_lists(t_token **token, t_cmd **cmd);
 
 // PARSING
 void	tokenize(t_token **token, char *input);
