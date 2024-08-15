@@ -33,10 +33,6 @@ bool	is_quote(const char c);
 void	exit_program(const char *message, const int status);
 void	*safe_malloc(size_t size);
 
-// PARSING
-void	tokenize(t_token **token, char *input);
-void	fill_commands(t_cmd **cmd, t_token **token);
-
 // BUILTINS
 int		mini_echo(char **argv);
 
