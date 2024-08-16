@@ -36,6 +36,7 @@ void	skip_spaces(char **input);
 
 // PARSING
 void	parse_input(t_shell *shell, char *input);
+char	**fill_commands(char *input);
 
 // BUILTINS
 int		mini_echo(char **argv);
