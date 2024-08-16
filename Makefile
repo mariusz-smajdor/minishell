@@ -3,8 +3,8 @@ CC = cc
 FLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
-SRCS = minishell.c builtins/mini_echo.c parse/parse_input.c parse/fill_commands.c \
-		utils/inlines.c utils/exit_program.c utils/safe_malloc.c utils/skip_spaces.c \
+SRCS = minishell.c parse/parse_input.c parse/fill_commands.c \
+		utils/exit_program.c utils/inlines.c utils/skip_spaces.c utils/safe_malloc.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFT = libft/libft.a
