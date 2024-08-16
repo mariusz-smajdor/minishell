@@ -106,12 +106,12 @@ char	**fill_commands(char *input)
 	int		i;
 
 	commands_len = get_commands_len(input);
-	commands = malloc(sizeof(char *) * commands_len + 1);
+	commands = safe_malloc(sizeof(char *) * commands_len + 1);
 	i = 0;
 	while (i < commands_len)
 	{
 		command_len = get_command_len(input);
-		commands[i] = malloc(sizeof(char) * (command_len + 1));
+		commands[i] = safe_malloc(sizeof(char) * (command_len + 1));
 		fill_command(&input, commands[i]);
 		i++;
 	}
