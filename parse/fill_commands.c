@@ -6,7 +6,7 @@
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:39:44 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/16 18:53:36 by msmajdor         ###   ########.fr       */
+/*   Updated: 2024/08/17 17:55:00 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,53 @@ static unsigned int	get_commands_len(char *input)
 	return (commands);
 }
 
+void	fill_env(char ***input, char **command)
+{
+	char *fake_env[] = { "USER=msmajdor", "USE2=msmajdo2", NULL };
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	(**input)++;
+    while (ft_isalnum(*(**input + i)) || *(**input + i) == '_')
+        i++;
+	j = 0;
+	while (fake_env[j])
+	{
+		if (ft_strncmp(fake_env[j], **input, i) == 0)
+		{
+			ft_strlcpy(*command, fake_env[j] + i + 1, ft_strlen(fake_env[j] + i));
+			*command += ft_strlen(fake_env[j] + i + 1);
+			**input += i;
+			return ;
+		}
+		j++;
+	}
+	**input += i;
+}
+
+size_t get_env_len(char **input)
+{
+    char *fake_env[] = { "USER=msmajdor", "USE2=msmajdo2", NULL };
+    size_t i = 0;
+    size_t j = 0;
+
+	(*input)++;
+    while (ft_isalnum(*(*input + i)) || *(*input + i) == '_')
+        i++;
+    while (fake_env[j])
+    {
+        if (ft_strncmp(fake_env[j], *input, i) == 0)
+		{
+			*input += i;
+            return (ft_strlen(fake_env[j] + i + 1));
+		}
+        j++;
+    }
+	*input += i;
+    return (0);
+}
+
 static unsigned int	get_command_len(char *input)
 {
 	int		len;
@@ -59,6 +106,8 @@ static unsigned int	get_command_len(char *input)
 				input++;
 			}
 		}
+		if (*input == '$')
+			len += get_env_len(&input);
 		if (is_space(*input))
 			break ;
 		if (!is_quote(*input))
@@ -88,6 +137,8 @@ static void	fill_command(char **input, char *command)
 			}
 			(*input)++;
 		}
+		if (**input == '$')
+			fill_env(&input, &command);
 		if (is_space(**input))
 			break ;
 		*command = **input;
@@ -116,5 +167,8 @@ char	**fill_commands(char *input)
 		i++;
 	}
 	commands[i] = NULL;
+	for (i = 0; commands[i]; i++)
+		printf("%s\n", commands[i]);
+
 	return (commands);
 }
