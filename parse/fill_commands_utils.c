@@ -6,7 +6,7 @@
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 17:58:41 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/17 18:17:49 by msmajdor         ###   ########.fr       */
+/*   Updated: 2024/08/17 19:52:50 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ size_t	get_commands_len(char *input)
 	return (commands);
 }
 
-size_t	get_command_len(char *input)
+size_t	get_command_len(t_shell *shell, char *input)
 {
 	size_t	len;
 	char	quote;
@@ -57,7 +57,7 @@ size_t	get_command_len(char *input)
 			{
 				if (quote == '\"')
 					if (*input == '$')
-						len += get_env_len(&input);
+						len += get_env_len(shell, &input);
 				if (*input == quote)
 					break ;
 				len++;
@@ -65,7 +65,7 @@ size_t	get_command_len(char *input)
 			}
 		}
 		if (*input == '$')
-			len += get_env_len(&input);
+			len += get_env_len(shell, &input);
 		if (is_space(*input))
 			break ;
 		if (!is_quote(*input))
@@ -75,9 +75,8 @@ size_t	get_command_len(char *input)
 	return (len);
 }
 
-size_t	get_env_len(char **input)
+size_t	get_env_len(t_shell *shell, char **input)
 {
-	char	*fake_env[] = { "USER=msmajdor", "USE2=msmajdo2", NULL };
 	size_t	i;
 	size_t	j;
 
@@ -86,14 +85,14 @@ size_t	get_env_len(char **input)
 	while (ft_isalnum(*(*input + i)) || *(*input + i) == '_')
 		i++;
 	j = 0;
-	while (fake_env[j])
+	while (shell->envp->key)
 	{
-		if (ft_strncmp(fake_env[j], *input, i) == 0)
+		if (ft_strncmp(shell->envp->key, *input, i) == 0)
 		{
 			*input += i;
-			return (ft_strlen(fake_env[j] + i + 1));
+			return (ft_strlen(shell->envp->value + 1));
 		}
-		j++;
+		shell->envp = shell->envp->next;
 	}
 	*input += i;
 	return (0);

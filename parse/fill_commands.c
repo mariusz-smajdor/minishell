@@ -6,15 +6,14 @@
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:39:44 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/17 18:17:18 by msmajdor         ###   ########.fr       */
+/*   Updated: 2024/08/17 20:26:06 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	fill_env(char ***input, char **command)
+static void	fill_env(t_shell *shell, char ***input, char **command)
 {
-	char *fake_env[] = { "USER=msmajdor", "USE2=msmajdo2", NULL };
 	size_t	i;
 	size_t	j;
 
@@ -23,21 +22,21 @@ static void	fill_env(char ***input, char **command)
 	while (ft_isalnum(*(**input + i)) || *(**input + i) == '_')
 	i++;
 	j = 0;
-	while (fake_env[j])
+	while (shell->envp->key)
 	{
-		if (ft_strncmp(fake_env[j], **input, i) == 0)
+		if (ft_strncmp(shell->envp->key, **input, i) == 0)
 		{
-			ft_strlcpy(*command, fake_env[j] + i + 1, ft_strlen(fake_env[j] + i));
-			*command += ft_strlen(fake_env[j] + i + 1);
+			ft_strlcpy(*command, shell->envp->value, ft_strlen(shell->envp->value) + 1);
+			*command += ft_strlen(shell->envp->value);
 			**input += i;
 			return ;
 		}
-		j++;
+		shell->envp = shell->envp->next;
 	}
 	**input += i;
 }
 
-static void	fill_command(char **input, char *command)
+static void	fill_command(t_shell *shell, char **input, char *command)
 {
 	char	quote;
 
@@ -53,7 +52,7 @@ static void	fill_command(char **input, char *command)
 			{
 				if (quote == '\"')
 					if (**input == '$')
-						fill_env(&input, &command);
+						fill_env(shell, &input, &command);
 				if (**input == quote)
 					break ;
 				*command = **input;
@@ -63,7 +62,7 @@ static void	fill_command(char **input, char *command)
 			(*input)++;
 		}
 		if (**input == '$')
-			fill_env(&input, &command);
+			fill_env(shell, &input, &command);
 		if (is_space(**input))
 			break ;
 		*command = **input;
@@ -74,7 +73,7 @@ static void	fill_command(char **input, char *command)
 	skip_spaces(input);
 }
 
-char	**fill_commands(char *input)
+char	**fill_commands(t_shell *shell, char *input)
 {
 	char	**commands;
 	int		commands_len;
@@ -86,9 +85,9 @@ char	**fill_commands(char *input)
 	i = 0;
 	while (i < commands_len)
 	{
-		command_len = get_command_len(input);
+		command_len = get_command_len(shell, input);
 		commands[i] = safe_malloc(sizeof(char) * (command_len + 1));
-		fill_command(&input, commands[i]);
+		fill_command(shell, &input, commands[i]);
 		i++;
 	}
 	commands[i] = NULL;

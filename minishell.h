@@ -6,7 +6,7 @@
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:03:24 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/17 19:34:55 by msmajdor         ###   ########.fr       */
+/*   Updated: 2024/08/17 19:53:07 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ void	init_shell(t_shell *shell, char **envp);
 
 // PARSE
 void	parse_input(t_shell *shell, char *input);
-char	**fill_commands(char *input);
+char	**fill_commands(t_shell *shell, char *input);
 size_t	get_commands_len(char *input);
-size_t	get_command_len(char *input);
-size_t	get_env_len(char **input);
+size_t	get_command_len(t_shell *shell, char *input);
+size_t	get_env_len(t_shell *shell, char **input);
 
 // UTILS
 void	exit_program(const char *message, const int status);
