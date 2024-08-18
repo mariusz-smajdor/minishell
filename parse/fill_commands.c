@@ -6,7 +6,7 @@
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:39:44 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/17 20:26:06 by msmajdor         ###   ########.fr       */
+/*   Updated: 2024/08/18 12:56:02 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,5 @@ char	**fill_commands(t_shell *shell, char *input)
 		i++;
 	}
 	commands[i] = NULL;
-	for (i = 0; commands[i]; i++)
-		printf("%s\n", commands[i]);
-
 	return (commands);
 }
