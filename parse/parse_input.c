@@ -6,7 +6,7 @@
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:31:36 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/17 19:39:04 by msmajdor         ###   ########.fr       */
+/*   Updated: 2024/08/18 15:36:47 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,5 @@ void	parse_input(t_shell *shell, char *input)
 
 	check_unclosed_quotes(input);
 	commands = fill_commands(shell, input);
+	parse_commands(shell, commands);
 }
