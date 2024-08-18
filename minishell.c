@@ -6,19 +6,11 @@
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:01:37 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/15 13:39:28 by msmajdor         ###   ########.fr       */
+/*   Updated: 2024/08/18 15:31:06 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	init_shell(t_shell *shell, char **envp)
-{
-	shell->token = malloc(sizeof(t_token));
-	shell->cmd = malloc(sizeof(t_cmd));
-	shell->envp = envp;
-	shell->exit = false;
-}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -34,6 +26,18 @@ int	main(int argc, char **argv, char **envp)
 		if (!input)
 			break ;
 		parse_input(&shell, ft_strtrim(input, " \t\n\r\v\f"));
+
+		///////////////////////////////////////////////////
+		t_cmd *tempcmd = shell.cmd;
+		while (tempcmd) {
+			for (size_t i = 0; tempcmd->av[i]; i++)
+				printf("av: %s ", tempcmd->av[i]);
+			printf("op: %d\n", tempcmd->op);
+			tempcmd = tempcmd->next;
+			printf("next\n");
+		}		
+		///////////////////////////////////////////////////
+		
 		add_history(input);
 		free(input);
 	}
