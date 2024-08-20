@@ -69,5 +69,13 @@ bool	is_space(const char c);
 bool	is_quote(const char c);
 void	skip_spaces(char **input);
 void	*safe_malloc(size_t size);
+char	*search_envp(char **envp, char *key);
+
+// BUILTINS
+int		mini_cd(t_cmd *cmd);
+int		mini_echo(t_cmd *cmd, char **argv);
+int		mini_env(t_cmd *cmd);
+int		mini_exec(t_cmd *cmd);
+int		mini_pwd(t_cmd *cmd);
 
 #endif
