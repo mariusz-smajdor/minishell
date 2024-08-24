@@ -3,77 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   mini_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiacek <mwiacek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/13 18:20:18 by mwiacek           #+#    #+#             */
-/*   Updated: 2024/08/20 16:25:31 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/08/18 19:01:17 by mwiacek           #+#    #+#             */
+/*   Updated: 2024/08/19 15:41:48 by mwiacek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	set_envp(t_cmd *cmd, char *key, char *value)
+static void	set_pwds(t_envp *envp, char *prev_dir, char *dir)
 {
-	char	*tmp;
-	char	*new;
-	size_t	i;
+	t_envp	*pwd;
+	t_envp	*old_pwd;
 
-	i = 0;
-	tmp = search_envp(cmd->envp, key);
-	if (tmp)
+	pwd = search_var(envp, "PWD");
+	old_pwd = search_var(envp, "OLDPWD");
+	if (old_pwd != NULL)
 	{
-		while (cmd->envp[i])
-		{
-			if (!ft_strncmp(cmd->envp[i], key, ft_strlen(key)))
-			{
-//				free(cmd->envp[i]);
-				new = ft_strjoin(key, "=");
-				cmd->envp[i] = ft_strjoin(new, value);
-				free(new);
-				return (0);
-			}
-			i++;
-		}
+		free(old_pwd->value);
+		old_pwd->value = ft_strdup(prev_dir);
 	}
-	return (-1);
-}
-
-static void	change_pwd(t_cmd *cmd, char *pwd)
-{
-	char	*oldpwd;
-
-	oldpwd = search_envp(cmd->envp, "PWD");
-	if (!oldpwd)
-	{
-		ft_putstr_fd("minishell: cd: PWD not set\n", STDERR_FILENO);
-		return ;
-	}
-	if (set_envp(cmd, "OLDPWD", oldpwd) == -1)
-	{
-		ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
-		return ;
-	}
-	if (set_envp(cmd, "PWD", pwd) == -1)
-	{
-		ft_putstr_fd("minishell: cd: PWD not set\n", STDERR_FILENO);
-		return ;
-	}
-}
-
-int	mini_cd(t_cmd *cmd)
-{
-	char	*dir;
-
-	if (!cmd->av[1])
-		dir = search_envp(cmd->envp, "HOME");
 	else
-		dir = cmd->av[1];
-	if (chdir(dir) == -1)
+		envp_add_back(&envp, "OLDPWD", prev_dir);
+	if (pwd)
 	{
-		ft_putstr_fd("cd: no such file or directory: ", STDERR_FILENO);
-		ft_putendl_fd(cmd->av[1], STDERR_FILENO);
-		return (EXIT_FAILURE);
+		free(pwd->value);
+		pwd->value = ft_strdup(getcwd(NULL, 0));
 	}
-	change_pwd(cmd, getcwd(NULL, 0));
+}
+
+int	mini_cd(t_shell *shell, t_cmd *cmd)
+{
+	char	*prev_dir;
+
+	prev_dir = getcwd(NULL, 0);
+	if (!cmd->av[1] || cmd->av[2])
+	{
+		printf("Wrong amount of arguments!\n");
+		return (1);
+	}
+	if (!ft_strncmp(cmd->av[1], "-", 1))
+	{
+		printf("Flag not supported.\n");
+		return (1);
+	}
+	if (chdir(cmd->av[1]))
+	{
+		printf("Failed to reach the destination target!\n");
+		return (1);
+	}
+	set_pwds(shell->envp, prev_dir, cmd->av[1]);
 	return (0);
 }
