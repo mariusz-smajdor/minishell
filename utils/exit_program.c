@@ -5,15 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 22:15:00 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/06/03 22:15:01 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/08/25 20:56:31 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/08/25 21:05:16 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exit_program(const char *message, const int status)
+void	exit_program(t_env *env, char *msg, int status)
 {
-	printf("%s\n", message);
+	free_env(env);
+	if (status)
+	{
+		printf("%s\n", msg);
+		exit(status);
+	}
 	exit(status);
 }
