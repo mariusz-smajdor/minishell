@@ -5,40 +5,46 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/15 13:01:37 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/18 15:31:06 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/08/25 17:25:37 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/08/29 08:05:26 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static void	init_envp(t_env *env, char **envp)
+{
+	int	i;
+
+	i = -1;
+	while (++i, envp[i])
+		;
+	env->envp = safe_malloc(sizeof(char *) * (i + 1));
+	i = -1;
+	while (++i, envp[i])
+		env->envp[i] = ft_strdup(envp[i]);
+	env->envp[i] = NULL;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	(void)argc;
-	(void)argv;
 	char	*input;
-	t_shell	shell;
+	t_hell	*hell;
+	t_env	env;
 
-	init_shell(&shell, envp);
-	while (shell.exit == false)
+	((void)argc, (void)argv);
+	init_envp(&env, envp);
+	while (true)
 	{
-		input = readline("minishell$ ");
+		input = readline("hell$ ");
 		if (!input)
 			break ;
-		parse_input(&shell, ft_strtrim(input, " \t\n\r\v\f"));
-
-		///////////////////////////////////////////////////
-		t_cmd *tempcmd = shell.cmd;
-		while (tempcmd) {
-			for (size_t i = 0; tempcmd->av[i]; i++)
-				printf("av: %s ", tempcmd->av[i]);
-			printf("op: %d\n", tempcmd->op);
-			tempcmd = tempcmd->next;
-			printf("next\n");
-		}		
-		///////////////////////////////////////////////////
-		
 		add_history(input);
+		hell = parse_input(&env, &input);
+		if (!hell)
+			continue ;
+		execute(&env, hell);
+		free_hell(hell);
 		free(input);
 	}
 	return (0);
