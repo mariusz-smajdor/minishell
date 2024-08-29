@@ -5,71 +5,88 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/21 14:07:20 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/24 23:19:23 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/08/26 22:57:39 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/08/29 08:18:35 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char *find_path(char *cmd)
+static int	await_processes(t_hell *hell, t_env *env)
 {
-	char *env_path;
-	char *path;
-	char **paths;
-	
-	env_path = getenv("PATH"); // do zmiany na wlasna funckcje ktora szuka w shell->envp
-	paths = ft_split(env_path, ':');
-	for (int i = 0; paths[i]; i++) // change to while
-	{
-		path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(path, cmd);
-		if (access(path, F_OK) == 0)
-			return (path);
-	}
-	return (NULL);
+	int	i;
+	int	exit_status;
+
+	i = -1;
+	while (hell[++i].cmd)
+		wait(&exit_status);
+	if (hell[i - 1].pid == 0)
+		return (env->last_result);
+	return (0);
 }
 
-int	get_filein(t_cmd *cmd)
+static int	execute_command(t_env *env, t_hell hell, bool fork)
 {
-	int fd;
-	t_cmd	*tmp;
-
-	tmp = cmd;
-	while (tmp->op == GT || tmp->op == GTGT)
+	if (fork)
 	{
-		if (tmp->op == GT)
-			fd = open(tmp->next->av[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else
-			fd = open(tmp->next->av[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		tmp = tmp->next;
-		if (tmp->op == GT || tmp->op == GTGT)
-			close(fd);
-		else
-			return (fd);
+		if (ft_strncmp(hell.cmd, "echo", ft_strlen(hell.cmd)) == 0)
+			return (mini_echo(hell));
+		if (ft_strncmp(hell.cmd, "pwd", ft_strlen(hell.cmd)) == 0)
+			return (mini_pwd(env));
+		if (ft_strncmp(hell.cmd, "env", ft_strlen(hell.cmd)) == 0)
+			return (mini_env(env));
+		return (search_bin(env, hell));
 	}
-	return (1);
+	if (ft_strncmp(hell.cmd, "cd", ft_strlen(hell.cmd)) == 0)
+		return (mini_cd(env, hell));
+	if (ft_strncmp(hell.cmd, "exit", ft_strlen(hell.cmd)) == 0)
+		return (mini_exit(env, hell));
+	if (ft_strncmp(hell.cmd, "export", ft_strlen(hell.cmd)) == 0)
+		return (mini_export(env, hell));
+	if (ft_strncmp(hell.cmd, "unset", ft_strlen(hell.cmd)) == 0)
+		return (mini_unset(env, hell));
+	return (-1);
 }
 
-void	exec(t_shell *shell)
-{
-	pid_t	pid;
-	int		filein;
-	char	*path;
 
-	pid = fork();
-	if (pid == 0)
+static void	execute_forked(t_env *env, t_hell *hell, int i)
+{
+	hell[i].pid = fork();
+	if (hell[i].pid == -1)
+		exit_program(env, "fork failed\n", 2);
+	if (hell[i].pid == 0)
 	{
-		filein = get_filein(shell->cmd);
-		if (filein != 1)
-			dup2(filein, 1);
-		if (mini_exec(shell, shell->cmd) == -1)
-		{
-			path = find_path(shell->cmd->av[0]);
-			execve(path, shell->cmd->av, NULL);
-		}
-		else
-			exit(0);
+		close_unused_pipes(hell, i);
+		redirect(&(hell[i]));
+		if (hell[i + 1].cmd)
+			dup2(hell[i].fd[1], STDOUT_FILENO);
+		if (i != 0)
+			dup2(hell[i - 1].fd[0], STDIN_FILENO);
+		env->last_result = execute_command(env, hell[i], true);
+		close(hell[i].fd[1]);
+		if (i != 0)
+			close(hell[i - 1].fd[0]);
+		exit(0);
 	}
-	waitpid(pid, NULL, 0);
+}
+
+void	execute(t_env *env, t_hell *hell)
+{
+	int	i;
+	int	result;
+
+	create_pipes(hell, env);
+	i = 0;
+	while (hell[i].cmd)
+	{
+		result = execute_command(env, hell[i], false);
+		hell[i].pid = 0;
+		if (result == -1)
+			execute_forked(env, hell, i);
+		else
+			env->last_result = result;
+		i++;
+	}
+	close_pipes(hell);
+	env->last_result = await_processes(hell, env);
 }
