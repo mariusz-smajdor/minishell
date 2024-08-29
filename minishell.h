@@ -5,77 +5,80 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/15 13:03:24 by msmajdor          #+#    #+#             */
-/*   Updated: 2024/08/18 15:37:21 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/08/25 17:25:23 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/08/28 13:52:40 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdlib.h>
 # include <stdbool.h>
+# include <limits.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
 
-typedef enum e_ops
+typedef struct s_env
 {
-	PIPE,
-	LT,
-	GT,
-	LTLT,
-	GTGT,
-	END,
-}	t_ops;
+	char	**envp;
+	int		last_result;
+	int		x;
+	int		y;
+}	t_env;
 
-typedef struct s_envp	t_envp;
-typedef struct s_cmd	t_cmd;
-
-typedef struct s_envp
+typedef struct s_hell
 {
-	char	*key;
-	char	*value;
-	t_envp	*next;
-}	t_envp;
-
-typedef struct s_cmd
-{
-	char	**av;
-	t_ops	op;
-	t_cmd	*next;
-}	t_cmd;
-
-typedef struct s_shell
-{
-	t_cmd	*cmd;
-	t_envp	*envp;
-	bool	exit;
-}	t_shell;
-
-void	init_shell(t_shell *shell, char **envp);
-
-// PARSE
-void	parse_input(t_shell *shell, char *input);
-char	**fill_commands(t_shell *shell, char *input);
-size_t	get_commands_len(char *input);
-size_t	get_command_len(t_shell *shell, char *input);
-size_t	get_env_len(t_shell *shell, char **input);
-void	parse_commands(t_shell *shell, char **commands);
+	char	**argv;
+	char	*cmd;
+	char	*flags;
+	int		fd[2];
+	int		pid;
+}	t_hell;
 
 // UTILS
-void	exit_program(const char *message, const int status);
-bool	is_space(const char c);
-bool	is_quote(const char c);
-void	skip_spaces(char **input);
+void	free_arr(char **arr);
+void	free_env(t_env *env);
+void	free_hell(t_hell *hell);
 void	*safe_malloc(size_t size);
-char	*search_envp(char **envp, char *key);
+void	exit_program(t_env *env, char *msg, int status);
+char	*get_env(t_env *env, char *value);
+void	add_env(t_env *env, char *name, char *val);
+void	del_env(t_env *env, char *name);
+bool	is_env_char(char c);
+int		words_count(char const *s, char c);
+
+// PARSING
+t_hell	*parse_input(t_env *env, char **input);
+void	trim_spaces(char **input, char *quote, char	**result);
+int		check_unclosed_quotes(char *str, int n);
+int		is_quote(char c);
+t_hell	*init_hell(char **input);
+char	**validate_input(char **input);
+void	add_arg(t_hell *hell, int *k, char *arg);
+int		count_args(char *str_com, int i);
 
 // BUILTINS
-int		mini_cd(t_cmd *cmd);
-int		mini_echo(t_cmd *cmd, char **argv);
-int		mini_env(t_cmd *cmd);
-int		mini_exec(t_cmd *cmd);
-int		mini_pwd(t_cmd *cmd);
+int		mini_cd(t_env *env, t_hell hell);
+int		mini_echo(t_hell hell);
+int		mini_env(t_env *env);
+int		mini_exit(t_env *env, t_hell hell);
+int		mini_export(t_env *env, t_hell hell);
+int		mini_pwd(t_env *env);
+int		mini_unset(t_env *env, t_hell hell);
+
+// EXECUTION
+void	execute(t_env *env, t_hell *hell);
+void	create_pipes(t_hell *hell, t_env *env);
+void	close_pipes(t_hell *hell);
+void	close_unused_pipes(t_hell *hell, int i);
+int		search_bin(t_env *env, t_hell hell);
+void	redirect(t_hell *hell);
+char	*get_absolute_path(char *script, t_env *env);
+int		execute_bin(char *bin_path, t_env *env, t_hell hell);
+char	*join_path(char *p1, char *p2);
 
 #endif
