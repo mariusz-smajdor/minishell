@@ -5,27 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 18:50:32 by mwiacek           #+#    #+#             */
-/*   Updated: 2024/08/21 15:16:38 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/08/26 22:07:48 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/08/26 22:22:08 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	mini_env(t_envp *envp)
+int	mini_env(t_env *env)
 {
-	t_envp	*tmp;
+	int	i;
 
-	if (!envp)
-		return (EXIT_FAILURE);
-	tmp = envp;
-	while (tmp)
-	{
-		ft_putstr_fd(tmp->key, STDIN_FILENO);
-		ft_putchar_fd('=', STDIN_FILENO);
-		ft_putstr_fd(tmp->value, STDIN_FILENO);
-		ft_putchar_fd('\n', STDIN_FILENO);
-		tmp = tmp->next;
-	}
-	return (EXIT_SUCCESS);
+	if (!env->envp)
+		return (0);
+	i = -1;
+	while (++i, env->envp[i])
+		printf("%s\n", env->envp[i]);
+	return (0);
 }

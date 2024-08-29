@@ -3,56 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   mini_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiacek <mwiacek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 19:01:17 by mwiacek           #+#    #+#             */
-/*   Updated: 2024/08/19 15:41:48 by mwiacek          ###   ########.fr       */
+/*   Created: 2024/08/26 21:31:04 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/08/27 00:41:21 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	set_pwds(t_envp *envp, char *prev_dir, char *dir)
+static int	get_status(t_hell *hell, char *home)
 {
-	t_envp	*pwd;
-	t_envp	*old_pwd;
-
-	pwd = search_var(envp, "PWD");
-	old_pwd = search_var(envp, "OLDPWD");
-	if (old_pwd != NULL)
+	if (hell->argv[0] == NULL)
 	{
-		free(old_pwd->value);
-		old_pwd->value = ft_strdup(prev_dir);
+		if (home == NULL)
+		{
+			ft_putstr_fd("The HOME variable is not set\n", 2);
+			return (1);
+		}
+		if (chdir(home) != 0)
+		{
+			ft_putstr_fd("The HOME variable is not valid\n", 2);
+			return (1);
+		}
 	}
 	else
-		envp_add_back(&envp, "OLDPWD", prev_dir);
-	if (pwd)
 	{
-		free(pwd->value);
-		pwd->value = ft_strdup(getcwd(NULL, 0));
+		if (chdir(hell->argv[0]) != 0)
+		{
+			ft_putstr_fd("cd: No such file or directory\n", 2);
+			return (1);
+		}
 	}
+	return (0);
 }
 
-int	mini_cd(t_shell *shell, t_cmd *cmd)
+int	mini_cd(t_env *env, t_hell hell)
 {
-	char	*prev_dir;
+	char	*home;
+	char	buffer[1024];
+	int		status;
 
-	prev_dir = getcwd(NULL, 0);
-	if (!cmd->av[1] || cmd->av[2])
-	{
-		printf("Wrong amount of arguments!\n");
-		return (1);
-	}
-	if (!ft_strncmp(cmd->av[1], "-", 1))
-	{
-		printf("Flag not supported.\n");
-		return (1);
-	}
-	if (chdir(cmd->av[1]))
-	{
-		printf("Failed to reach the destination target!\n");
-		return (1);
-	}
-	set_pwds(shell->envp, prev_dir, cmd->av[1]);
-	return (0);
+	home = get_env(env, "HOME");
+	status = get_status(&hell, home);
+	del_env(env, "PWD");
+	add_env(env, "PWD", getcwd(buffer, 1024));
+	return (status);
 }

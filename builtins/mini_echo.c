@@ -5,50 +5,55 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: msmajdor <msmajdor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 18:33:55 by mwiacek           #+#    #+#             */
-/*   Updated: 2024/08/21 14:00:53 by msmajdor         ###   ########.fr       */
+/*   Created: 2024/08/26 22:00:36 by msmajdor          #+#    #+#             */
+/*   Updated: 2024/08/29 08:34:22 by msmajdor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	print_vars(char **vars)
+static int	check_flags(t_hell *hell, bool *add_nl)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (vars[i])
+	if (hell->flags)
 	{
-		ft_putstr_fd(vars[i], STDOUT_FILENO);
-		if (vars[i + 1] && ft_strlen(vars[i])) /// strlen check zeby nie dodawac spacji miedziy pustymi stringami : )))
-			ft_putchar_fd(' ', STDOUT_FILENO);
-		i++;
+		while (hell->flags[i])
+		{
+			if (hell->flags[i++] != 'n')
+			{
+				ft_putstr_fd("invalid flag\n", 2);
+				return (-1);
+			}
+		}
+		if (hell->flags[0] == 'n')
+			*add_nl = false;
 	}
+	return (0);
 }
 
-int	mini_echo(char **argv)
+int	mini_echo(t_hell hell)
 {
-	size_t	i;
-	size_t	j;
-	bool	no_nl;
+	bool	add_nl;
+	int		status;
+	int		i;
 
-	i = 1;
-	no_nl = false;
-	while (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n')
+	i = 0;
+	add_nl = true;
+	status = check_flags(&hell, &add_nl);
+	if (hell.argv && hell.argv[0] != NULL)
 	{
-		j = 1;
-		while (argv[i][j] == 'n')
-			j++;
-		if (argv[i][j] == '\0')
+		ft_putstr_fd(hell.argv[i], 1);
+		i++;
+		while (hell.argv[i])
 		{
-			no_nl = true;
+			ft_putstr_fd(" ", 1);
+			ft_putstr_fd(hell.argv[i], 1);
 			i++;
 		}
-		else
-			break ;
 	}
-	print_vars(&argv[i]);
-	if (!no_nl)
-		ft_putchar_fd('\n', STDOUT_FILENO);
-	return (EXIT_SUCCESS);
+	if (add_nl)
+		ft_putstr_fd("\n", 1);
+	return (status);
 }
