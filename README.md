@@ -10,7 +10,6 @@ This project was created by [msmajdor](https://github.com/mariusz-smajdor) and [
 - [Installation](#installation)
 - [Usage](#usage)
 - [Built-in Commands](#built-in-commands)
-- [Project Structure](#project-structure)
 - [Known Issues](#known-issues)
 - [Contributing](#contributing)
 
