@@ -5,7 +5,7 @@ CC			:= cc
 FLAGS		:= -Wall -Wextra -Werror -I./src -I./libft
 LIBS		:= -lreadline
 
-SRC			:= $(wildcard src/*.c) $(wildcard src/parsing/*.c)
+SRC			:= $(wildcard src/*.c) $(wildcard src/parsing/*.c) $(wildcard src/env/*.c) $(wildcard src/utils/*.c)
 OBJ			:= $(SRC:.c=.o)
 
 LIBFT_DIR	:= libft

@@ -1,24 +1,23 @@
 #include "minishell.h"
 
-int main(int ac, char **av, char **ev)
+int	main(int argc, char **argv, char **envp)
 {
-    (void)ac;
-    (void)av;
-    (void)ev;
+	t_data	data;
+	char	*line;
 
-    char *line;
-
-    while (true)
+	((void)argc, (void)argv);
+	init_env(&data, envp);
+	while (true)
     {
         line = readline("minishell$ ");
         if (line == NULL)
-            break;
-        if (line[0] != '\0')
-        {
-            add_history(line);
-            parse_input(line);
-        }
-        free(line);
-    }
-    return (0);
+			break;
+		if (line[0] != '\0')
+		{
+			parse_input(ft_strtrim(line, " "));
+			add_history(line);
+		}
+		free(line);
+	}
+	return (0);
 }

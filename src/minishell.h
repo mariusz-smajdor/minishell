@@ -8,6 +8,21 @@
 # include <readline/history.h>
 # include "libft.h"
 
-void parse_input(char *line);
+typedef struct s_env
+{
+    char            *key;
+    char            *value;
+    struct s_env    *next;
+}   t_env;
+
+typedef struct s_data
+{
+	char	**args;
+	t_env	*env;
+}	t_data;
+
+void	parse_input(char *line);
+void	init_env(t_data *data, char **envp);
+void	exit_error(char *message);
 
 #endif
