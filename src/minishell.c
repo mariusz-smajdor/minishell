@@ -14,7 +14,7 @@ int	main(int argc, char **argv, char **envp)
 			break;
 		if (line[0] != '\0')
 		{
-			parse_input(ft_strtrim(line, " "));
+			parse_input(&data, ft_strtrim(line, " "));
 			add_history(line);
 		}
 		free(line);
