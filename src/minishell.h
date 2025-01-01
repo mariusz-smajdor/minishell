@@ -28,8 +28,7 @@ void	init_env(t_data *data, char **envp);
 void	parse_input(t_data *data, char *line);
 void	exit_error(char *message);
 
-void	skip_spaces(char **line, short *n);
-void	skip_quotes(char **line, short *n);
+void	skip_spaces(char **line);
 bool	is_space(char c);
 bool	is_quote(char c);
 
